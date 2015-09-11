@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="AppRestApi" default="re-war">
+	<!-- properies -->
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="webroot.dir" value="${basedir}/WebContent" />
+	<property name="build.dir" value="${basedir}/build"></property>
+	<property name="jar.mainclass" value="set your jar Main-Class name,if need."></property>
+
+	<!-- 定义classpath -->
+	<path id="lib-classpath">
+		<fileset file="${webroot.dir}/WEB-INF/lib/*.jar" />
+	</path>
+	<path id="master-classpath">
+		<path refid="lib-classpath" />
+		<pathelement path="${webroot.dir}/WEB-INF/classes" />
+	</path>
+
+
+	<!-- 初始化任务 -->
+	<target name="init"></target>
+
+	<!-- 编译 -->
+	<target name="compile" depends="init" description="compile the source files">
+		<mkdir dir="${build.dir}/classes" />
+		<javac source="1.7" target="1.7" srcdir="${src.dir}" destdir="${build.dir}/classes"
+			includeantruntime="on">
+			<classpath refid="master-classpath" />
+			<compilerarg line="-encoding UTF-8" />
+		</javac>
+		<copy todir="${build.dir}/classes">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<!-- 发布 -->
+	<target name="publish" depends="compile"
+		description="publish classes and resouce files to web root">
+		<copy todir="${webroot.dir}/WEB-INF/classes">
+			<fileset dir="${build.dir}/classes"></fileset>
+		</copy>
+	</target>
+
+	<target name="republish" depends="clean,publish" description="you guess" />
+
+	<!-- 打包jar -->
+	<target name="jar" depends="compile" description="pack a .jar file.">
+		<!--Create a property containing all .jar files, prefix lib/, and seperated 
+			with a space -->
+		<pathconvert property="mf.classpath" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<!-- jar包文件只留文件名，去掉目录信息 -->
+					<flattenmapper />
+					<!-- add lib/ prefix -->
+					<globmapper from="*" to="lib/*" />
+				</chainedmapper>
+			</mapper>
+			<path refid="master-classpath" />
+		</pathconvert>
+		<jar destfile="${build.dir}/${ant.project.name}.jar" basedir="${build.dir}/classes">
+			<manifest>
+				<attribute name="Main-class" value="${jar.mainclass}" />
+				<attribute name="Class-Path" value="${mf.classpath}" />
+			</manifest>
+		</jar>
+	</target>
+	<!-- 打包成war -->
+	<target name="war" depends="publish" description="pack a .war file">
+		<war warfile="${build.dir}/${ant.project.name}.war" webxml="${webroot.dir}/WEB-INF/web.xml">
+			<lib dir="${webroot.dir}/WEB-INF/lib" />
+			<classes dir="${webroot.dir}/WEB-INF/classes" />
+			<fileset dir="${webroot.dir}" includes="**/*.jsp" />
+			<fileset dir="${webroot.dir}" includes="**/*.css" />
+			<fileset dir="${webroot.dir}" includes="**/*.js" />
+		</war>
+	</target>
+	
+	<target name="re-war" depends="clean,war"></target>
+
+	<!-- 清理 -->
+	<target name="clean" depends="init" description="clean the template files.">
+		<delete dir="${build.dir}" />
+		<delete dir="${webroot.dir}/WEB-INF/classes" />
+	</target>
+</project>
