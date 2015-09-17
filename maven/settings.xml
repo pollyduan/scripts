@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+	<localRepository>/Users/pollyduan/.m2/repository</localRepository>
+	<profiles>
+		<profile>
+			<id>central</id>
+			<repositories>
+				<repository>
+					<id>central</id>
+					<name>Central Repository</name>
+					<url>http://repo2.maven.org/maven2/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+		<profile>
+			<id>oschina</id>
+			<repositories>
+				<repository>
+					<id>oschina.net</id>
+					<name>Central Repository</name>
+					<url>http://maven.oschina.net/content/groups/public/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled><!---->
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>oschina.net</id>
+					<name>Central Repository</name>
+					<url>http://maven.oschina.net/content/groups/public/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
+	<activeProfiles>
+		<activeProfile>oschina</activeProfile>
+	</activeProfiles>
+</settings>
